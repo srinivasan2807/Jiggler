@@ -1,6 +1,6 @@
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
-
+export const TweetColor = "#1C9BF0"
 export default {
   light: {
     text: '#000',
