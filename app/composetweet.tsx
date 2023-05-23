@@ -9,8 +9,12 @@ import {
   Pressable,
   GestureResponderEvent,
   SafeAreaView,
+  ToastAndroid,
 } from "react-native";
 import { TweetColor } from "../constants/Colors";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createTweet } from "../lib/api/tweets";
+import Loader from "../components/Loader";
 const user = {
   id: "u1",
   username: "VadimNotJustDev",
@@ -21,10 +25,22 @@ const user = {
 export default function NewTweetScreen() {
   const [Tweet, setTweet] = useState("");
   const router = useRouter();
-  function onTweetPressed() {
-    console.warn("posting your tweet!", Tweet);
-    setTweet("");
-    router.back();
+  const queryClient = useQueryClient();
+  const { mutateAsync, isLoading, isError, error } = useMutation({
+    mutationFn: createTweet,
+    onSuccess: (data) =>
+      queryClient.setQueryData(["tweets"], (existingTweets) => {
+        return [data, ...existingTweets];
+      }),
+  });
+  async function onTweetPressed() {
+    try {
+      await mutateAsync({ content: Tweet });
+      setTweet("");
+      router.back();
+    } catch (e) {
+      ToastAndroid.show(e?.message, ToastAndroid.SHORT);
+    }
   }
 
   return (
@@ -34,6 +50,7 @@ export default function NewTweetScreen() {
           <Link href={"../"} style={styles.cancelLink}>
             Cancel
           </Link>
+          {isLoading && <Loader />}
           <Pressable onPress={onTweetPressed} style={styles.button}>
             <Text style={styles.buttonText}>Tweet</Text>
           </Pressable>
@@ -50,6 +67,7 @@ export default function NewTweetScreen() {
           />
         </View>
       </View>
+      {isError && <Text>{error?.message}</Text>}
     </SafeAreaView>
   );
 }

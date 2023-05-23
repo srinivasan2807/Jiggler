@@ -17,6 +17,7 @@ import Tweet from "../../../../components/Tweet";
 import tweets from "../../../../assets/data/tweets";
 import { useQuery } from "@tanstack/react-query";
 import { listTweets } from "../../../../lib/api/tweets";
+import Loader from "../../../../components/Loader";
 
 export default function FeedScreen() {
   const { data, isLoading, error } = useQuery({
@@ -25,11 +26,7 @@ export default function FeedScreen() {
   });
 
   if (isLoading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator />
-      </View>
-    );
+    return <Loader />;
   }
 
   if (error) {
@@ -75,10 +72,5 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     overflow: "hidden",
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
