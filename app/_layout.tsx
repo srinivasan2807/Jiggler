@@ -56,6 +56,14 @@ function RootLayoutNav() {
               name="composetweet"
               options={{ headerTitle: "New Tweet", headerShown: false }}
             />
+            <Stack.Screen
+              name="(auth)/signIn"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="(auth)/authenticate"
+              options={{ title: "Authenticate" }}
+            />
           </Stack>
         </ThemeProvider>
       </QueryClientProvider>
